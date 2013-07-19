@@ -7,7 +7,7 @@ find_files(){
 			# echo "dir: $file" 
 			find_files "$file"
 		elif [ -f "$file" ] && [[ "$file" == *.h ]]; then
-			# echo "file: $file"
+			echo "file: $file"
 			check_dealloc "$file"
 		fi
 	done
@@ -21,7 +21,7 @@ check_dealloc(){
 			need_dealloc_field=`echo $raw_need_dealloc_field | sed -e 's/*//'`
 			# echo $need_dealloc_field
 			m_file=`echo $1 | sed 's/.h/.m/'`
-			dealloc_lines=`cat $m_file | sed -n 'N; /dealloc\n*{/,/}/ { //d; p;}'`
+			dealloc_lines=`cat $m_file | sed -n 'N; /dealloc[\n \s]*{/,/}/ { //d; p;}'`
 			# echo $dealloc_lines
 			if [[ $dealloc_lines == *$need_dealloc_field* ]]; then
 				echo "dealloced: "$need_dealloc_field
@@ -32,4 +32,4 @@ check_dealloc(){
 	done
 }
 
-find_files "your dir"
+find_files "/path/"
